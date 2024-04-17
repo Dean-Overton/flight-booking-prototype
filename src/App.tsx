@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import flightLogo from '/flightlogo.svg';
 import './App.css';
 import '@wojtekmaj/react-daterange-picker/dist/DateRangePicker.css';
@@ -9,7 +9,7 @@ import CountrySelect from './components/CountrySelect';
 import ClassSelect from './components/ClassSelect';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
-import FlightSkeleton from './components/FlightSkeleton';
+import FlightSelections from './components/FlightSelection';
 import { Button } from '@mui/material';
 import CountSelect from './components/CountSelect';
 import DateRangePicker from '@wojtekmaj/react-daterange-picker';
@@ -18,39 +18,25 @@ type ValuePiece = Date | null;
 
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
+function generateRandomString(length) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
 function App() {
   const [value, onChange] = useState<Value>([new Date(), new Date()]);
 
-  const [loadingTime, setLoadTime] = useState(0);
-  const [loadingInvervalID, setloadingInvervalID] =
-    useState<NodeJS.Timeout | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    if (loadingTime <= 0) {
-      clearInterval(loadingInvervalID);
-      setLoading(false);
-      setLoaded(true);
-    }
-  }, [loadingTime]);
-  useEffect(() => {
-    return () => {
-      if (loadingInvervalID) {
-        clearInterval(loadingInvervalID);
-      }
-    };
-  }, [loadingInvervalID]);
+  const [source, setSource] = useState('hj');
+  const [dest, setDest] = useState('iji');
+  const [rend, setRendFlights] = useState(false);
   const handleSearch = () => {
-    setLoadTime(3);
-    if (!loading) {
-      setloadingInvervalID(
-        setInterval(() => {
-          setLoadTime((prevTimer) => prevTimer - 1);
-        }, 1000)
-      );
-      setLoading(true);
-    }
+    setRendFlights(true);
+    setSource(generateRandomString(3))
   };
   return (
     <>
@@ -67,7 +53,7 @@ function App() {
           }}
         >
           <Stack direction="row" spacing={2}>
-            <CountrySelect labelText="Leaving From" />
+            <CountrySelect labelText="Leaving From"/>
             <CountrySelect labelText="To Destination" />
           </Stack>
           <Stack mt={2} direction="row" spacing={2}>
@@ -83,7 +69,9 @@ function App() {
         </Paper>
 
         <Stack mt={3} spacing={2}>
-          {loading && Array.from({ length: 3 }, () => <FlightSkeleton />)}
+          {rend && (
+            <FlightSelections sourceCode={source} destinationCode={dest}/>
+          )}
         </Stack>
       </div>
     </>
