@@ -1,4 +1,5 @@
 import FlightBookingStepper from './stepper';
+import '../../App.css';
 
 import { Typography, Paper } from '@mui/material';
 
