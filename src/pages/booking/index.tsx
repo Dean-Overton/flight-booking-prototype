@@ -6,7 +6,7 @@ const Booking = () => {
     return (
         <Paper>
             <Typography variant="h3">Booking Details</Typography>
-            <FlightBookingStepper/>
+            <FlightBookingStepper progress={2}/>
         </Paper>
     );
 }

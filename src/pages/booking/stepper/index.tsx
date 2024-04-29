@@ -5,9 +5,9 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Check from '@mui/icons-material/Check';
-import SettingsIcon from '@mui/icons-material/Settings';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import VideoLabelIcon from '@mui/icons-material/VideoLabel';
+import LayersIcon from '@mui/icons-material/Layers';
+import AirlineSeatLegroomNormalIcon from '@mui/icons-material/AirlineSeatLegroomNormal';
+import CreditScoreIcon from '@mui/icons-material/CreditScore';
 import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
 import { StepIconProps } from '@mui/material/StepIcon';
 
@@ -123,9 +123,9 @@ function ColorlibStepIcon(props: StepIconProps) {
   const { active, completed, className } = props;
 
   const icons: { [index: string]: React.ReactElement } = {
-    1: <SettingsIcon />,
-    2: <GroupAddIcon />,
-    3: <VideoLabelIcon />,
+    1: <LayersIcon />,
+    2: <AirlineSeatLegroomNormalIcon />,
+    3: <CreditScoreIcon />,
   };
 
   return (
@@ -137,9 +137,12 @@ function ColorlibStepIcon(props: StepIconProps) {
 
 const steps = ['Package and Extras', 'Seat Selection', 'Payment'];
 
-export default function FlightBookingStepper() {
+interface FlightBookingStepperProps {
+    progress: number; // Prop name with its type (string)
+  }
+const FlightBookingStepper = (props: FlightBookingStepperProps) => {
   return (
-      <Stepper alternativeLabel activeStep={0} connector={<ColorlibConnector />}>
+      <Stepper alternativeLabel activeStep={props.progress} connector={<ColorlibConnector />}>
         {steps.map((label) => (
           <Step key={label}>
             <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
@@ -148,3 +151,4 @@ export default function FlightBookingStepper() {
       </Stepper>
   );
 }
+export default FlightBookingStepper;
