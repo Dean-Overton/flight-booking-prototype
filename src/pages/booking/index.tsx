@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FlightBookingStepper from './stepper';
 import '../../App.css';
 
@@ -8,14 +8,18 @@ import SeatSelection from './seat-selection';
 
 const Booking = () => {
     const [progress, setProgress] = useState(1);
+    const [seats, setSeats] = useState([]);
     return (
         <Paper sx={{p:2}}>
             <Typography variant="h3">Booking Details</Typography>
             <Typography variant="subtitle1">Current Flight</Typography>
             <FlightBookingStepper progress={progress}/>
+            <Typography variant="subtitle1">Selected Seats: {seats.map(seat => (
+                `${seat}, `
+            ))}</Typography>
             <Box sx={{mt:3}}>
                 {progress == 0 && <ExtrasTab/>}
-                {progress == 1 && <SeatSelection numberOfPassengers={2}/>}
+                {progress == 1 && <SeatSelection numberOfPassengers={2} seatsSelectedCallback={setSeats}/>}
             </Box>
         </Paper>
     );

@@ -14,6 +14,7 @@ import ChairCheckBox from './chairCheckbox';
 
 interface SeatSelectionProps {
     numberOfPassengers: number,
+    seatsSelectedCallback: (newSeats: string[]) => void;
 }
 const SeatSelection = (props: SeatSelectionProps) => {
     const seatRows = 30;
@@ -43,23 +44,30 @@ const SeatSelection = (props: SeatSelectionProps) => {
     const [seatAvailability, setSeatAvailability] = useState(seatMap);
     
     const [seatsSelectedCount, setseatsSelectedCount] = useState(0);
+    const [selectedSeatCodes, setSelectedSeatCodes] = useState<string[]>([]);
+
 
     const handleSeatSelectChange = (code: string) => (event: React.ChangeEvent<HTMLInputElement>)  => {
-        if (seatsSelectedCount < props.numberOfPassengers && seatsSelectedCount > 0) {
-            setSeatAvailability({ ...seatAvailability, [code]: event.target.checked });
-            if (event.target.checked == true){
-                setseatsSelectedCount(seatsSelectedCount+1);
-            } else {
-                setseatsSelectedCount(seatsSelectedCount-1);
+        if (event.target.checked == false){
+            if (seatsSelectedCount == 0) {
+                return;
             }
-        }
-        if (seatsSelectedCount == props.numberOfPassengers && event.target.checked == false){
+
+            setSeatAvailability({ ...seatAvailability, [code]: event.target.checked });
             setseatsSelectedCount(seatsSelectedCount-1);
+            const newCodes = selectedSeatCodes.filter(item => item !== code);
+            setSelectedSeatCodes(newCodes);
+            props.seatsSelectedCallback(newCodes);
+        } else {
+            if (seatsSelectedCount >= props.numberOfPassengers) {
+                return;
+            }
+
             setSeatAvailability({ ...seatAvailability, [code]: event.target.checked });
-        }
-        if (seatsSelectedCount == 0 && event.target.checked == true){
             setseatsSelectedCount(seatsSelectedCount+1);
-            setSeatAvailability({ ...seatAvailability, [code]: event.target.checked });
+            const newCodes = [...selectedSeatCodes, code];
+            setSelectedSeatCodes(newCodes);
+            props.seatsSelectedCallback(newCodes);
         }
     }
     
