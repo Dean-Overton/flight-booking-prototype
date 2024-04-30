@@ -7,7 +7,7 @@ import ExtrasTab from './extras-tab';
 import SeatSelection from './seat-selection';
 
 const Booking = () => {
-    const [progress, setProgress] = useState(0);
+    const [progress, setProgress] = useState(1);
     return (
         <Paper sx={{p:2}}>
             <Typography variant="h3">Booking Details</Typography>

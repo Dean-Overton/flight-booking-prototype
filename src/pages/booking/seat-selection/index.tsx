@@ -10,6 +10,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Tooltip from '@mui/material/Tooltip';
 import Divider from '@mui/material/Divider';
 import { Typography } from '@mui/material';
+import ChairCheckBox from './chairCheckbox';
 
 interface SeatSelectionProps {
     numberOfPassengers: number,
@@ -27,33 +28,37 @@ const SeatSelection = (props: SeatSelectionProps) => {
       }, [seatGroups, seatRowletters]);
     const seatCodes = [];
     const seatMap: { [code: string]: boolean }  = {}
+    const seatDisabledMap: { [code: string]: boolean }  = {}
     for (let i = 0; i < seatRows; i++) {
         for (let j = 0; j < 4; j++) {
             const seatCode = `${seatRowletters[j]}${i+1}`
             seatCodes.push(seatCode);
+            
+            seatDisabledMap[seatCode] = Math.random() >= 0.5;
 
             seatMap[seatCode] = false;
         }
     }
+    const [disabledSeats, setDisabledSeats] = useState(seatDisabledMap);
     const [seatAvailability, setSeatAvailability] = useState(seatMap);
     
-    const [seatsSelected, setSeatsSelected] = useState(0);
+    const [seatsSelectedCount, setseatsSelectedCount] = useState(0);
 
     const handleSeatSelectChange = (code: string) => (event: React.ChangeEvent<HTMLInputElement>)  => {
-        if (seatsSelected < props.numberOfPassengers && seatsSelected > 0) {
+        if (seatsSelectedCount < props.numberOfPassengers && seatsSelectedCount > 0) {
             setSeatAvailability({ ...seatAvailability, [code]: event.target.checked });
             if (event.target.checked == true){
-                setSeatsSelected(seatsSelected+1);
+                setseatsSelectedCount(seatsSelectedCount+1);
             } else {
-                setSeatsSelected(seatsSelected-1);
+                setseatsSelectedCount(seatsSelectedCount-1);
             }
         }
-        if (seatsSelected == props.numberOfPassengers && event.target.checked == false){
-            setSeatsSelected(seatsSelected-1);
+        if (seatsSelectedCount == props.numberOfPassengers && event.target.checked == false){
+            setseatsSelectedCount(seatsSelectedCount-1);
             setSeatAvailability({ ...seatAvailability, [code]: event.target.checked });
         }
-        if (seatsSelected == 0 && event.target.checked == true){
-            setSeatsSelected(seatsSelected+1);
+        if (seatsSelectedCount == 0 && event.target.checked == true){
+            setseatsSelectedCount(seatsSelectedCount+1);
             setSeatAvailability({ ...seatAvailability, [code]: event.target.checked });
         }
     }
@@ -61,7 +66,7 @@ const SeatSelection = (props: SeatSelectionProps) => {
     return (
         <>
         <Box width={300} sx={{m: '0 auto'}}>
-            <Typography sx={{my:2}} variant="h5">{props.numberOfPassengers-seatsSelected} seats remaining</Typography>
+            <Typography sx={{my:2}} variant="h5">{props.numberOfPassengers-seatsSelectedCount} seats remaining</Typography>
             <Stack 
                 direction="row"
                 divider={<Divider orientation="vertical" flexItem />}
@@ -76,11 +81,12 @@ const SeatSelection = (props: SeatSelectionProps) => {
                 {seatCodes.map(seatCode => (
                 <Grid item xs={3}>
                     <Tooltip title={seatCode}>
-                    <Checkbox
+                    <ChairCheckBox
                         checked={seatAvailability[seatCode]}
                         name={seatCode}
                         onChange={handleSeatSelectChange(seatCode)}
                         inputProps={{ 'aria-label': 'controlled' }}
+                        disabled={disabledSeats[seatCode]}
                     />
                     </Tooltip>
                 </Grid>
