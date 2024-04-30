@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import Stack from '@mui/material/Stack';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
+import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import Check from '@mui/icons-material/Check';
 import LayersIcon from '@mui/icons-material/Layers';
 import AirlineSeatLegroomNormalIcon from '@mui/icons-material/AirlineSeatLegroomNormal';
