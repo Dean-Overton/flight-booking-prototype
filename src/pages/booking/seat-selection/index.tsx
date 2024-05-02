@@ -21,12 +21,12 @@ const SeatSelection = (props: SeatSelectionProps) => {
     const seatGroups = [2, 2]
     const seatRowletters = ['A', 'B', 'C', 'D'];
 
-    useEffect(() => {
-        const sumOfGroups = seatGroups.reduce((acc, current) => acc + current, 0);
-        if (sumOfGroups != seatRowletters.length) {
+    // useEffect(() => {
+    //     const sumOfGroups = seatGroups.reduce((acc, current) => acc + current, 0);
+    //     if (sumOfGroups != seatRowletters.length) {
 
-        }
-      }, [seatGroups, seatRowletters]);
+    //     }
+    //   }, [seatGroups, seatRowletters]);
     const seatCodes = [];
     const seatMap: { [code: string]: boolean }  = {}
     const seatDisabledMap: { [code: string]: boolean }  = {}
@@ -73,34 +73,35 @@ const SeatSelection = (props: SeatSelectionProps) => {
     
     return (
         <>
-        <Box width={300} sx={{m: '0 auto'}}>
-            <Typography sx={{my:2}} variant="h5">{props.numberOfPassengers-seatsSelectedCount} seats remaining</Typography>
-            <Stack 
-                direction="row"
-                divider={<Divider orientation="vertical" flexItem />}
-                spacing={3}
-            >
-                <Typography>L Window</Typography>
-                <Typography>L Isle</Typography>
-                <Typography>R Isle</Typography>
-                <Typography>R Window</Typography>
-            </Stack>
-            <Grid container spacing={1}>
-                {seatCodes.map(seatCode => (
-                <Grid item xs={3}>
-                    <Tooltip title={seatCode}>
-                    <ChairCheckBox
-                        checked={seatAvailability[seatCode]}
-                        name={seatCode}
-                        onChange={handleSeatSelectChange(seatCode)}
-                        inputProps={{ 'aria-label': 'controlled' }}
-                        disabled={disabledSeats[seatCode]}
-                    />
-                    </Tooltip>
+            <Box>
+                <Typography sx={{my:2}} variant="h5">{props.numberOfPassengers-seatsSelectedCount} seats remaining</Typography>
+                <Stack 
+                    direction="row"
+                    divider={<Divider orientation="vertical" flexItem />}
+                    spacing={3}
+                    width={250}
+                >
+                    <Typography>L Window</Typography>
+                    <Typography>L Isle</Typography>
+                    <Typography>R Isle</Typography>
+                    <Typography>R Window</Typography>
+                </Stack>
+                <Grid container spacing={1} width={300} mx='auto'>
+                    {seatCodes.map(seatCode => (
+                    <Grid item xs={3}>
+                        <Tooltip title={seatCode}>
+                        <ChairCheckBox
+                            checked={seatAvailability[seatCode]}
+                            name={seatCode}
+                            onChange={handleSeatSelectChange(seatCode)}
+                            inputProps={{ 'aria-label': 'controlled' }}
+                            disabled={disabledSeats[seatCode]}
+                        />
+                        </Tooltip>
+                    </Grid>
+                    ))}
                 </Grid>
-                ))}
-            </Grid>
-        </Box>
+            </Box>
         </>
     );
 }

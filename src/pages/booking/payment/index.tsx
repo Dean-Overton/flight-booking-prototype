@@ -20,9 +20,13 @@ const Payment = () => {
         <>
         <Box>
             <Grid container spacing={2}>
-                <Grid item xs={8}>
+                <Grid item xs={12} md={6}>
                     <PaymentOptionsCard/>
+                </Grid>
+                <Grid item xs={12} md={6}>
                     <FlightSummaryCard/>
+                </Grid>
+                <Grid item xs={12} md={6}>
                     <PaymentSummaryCard/>
                 </Grid>
             </Grid>

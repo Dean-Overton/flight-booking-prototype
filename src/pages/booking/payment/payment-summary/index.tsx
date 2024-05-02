@@ -57,6 +57,7 @@ export default function OutlinedCard() {
                 endIcon={<LockIcon/>}
                 onClick={()=>makePaymentClick()}
                 loading={paymentLoading}
+                fullWidth
                 sx={{mx:'auto'}}>
                     <span>Pay Now</span>
                 </LoadingButton>
