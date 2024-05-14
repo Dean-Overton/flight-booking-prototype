@@ -6,8 +6,10 @@ import { Typography, Paper, Box, Button, Stack } from '@mui/material';
 import ExtrasTab from './extras-tab';
 import SeatSelection from './seat-selection';
 import Payment from './payment';
+import { useParams } from 'react-router-dom';
 
 const Booking = () => {
+    const {source, destination} = useParams();
     const [totalCost, setCost] = useState(375);
     const [progress, setProgress] = useState(0);
     const [seats, setSeats] = useState([]);
@@ -26,7 +28,7 @@ const Booking = () => {
     return (
         <Paper sx={{p:2, mx:'auto', width:'80%'}}>
             <Typography variant="h3">Booking Details</Typography>
-            <Typography variant="subtitle1">Current Flight: Sydney - Melbourne</Typography>
+            <Typography variant="subtitle1">Current Flight: {source} - {destination}</Typography>
             <Typography variant="subtitle1">Total Cost: ${totalCost}</Typography>
             <FlightBookingStepper progress={progress}/>
             {seats.length!=0 &&<Typography variant="subtitle1">Selected Seats: {seats.map(seat => (

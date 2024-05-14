@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import FlightSkeleton from '../FlightSkeleton';
+import { Link } from 'react-router-dom';
 
 interface FlightSearchProps {
   sourceCode: string; // Prop name with its type (string)
@@ -69,7 +70,9 @@ const FlightSelection : React.FC<FlightSearchProps> = ({ sourceCode, destination
               {flight.departureTime} - {flight.arrivalTime}
             </Typography>
             <Typography>${flight.cost}</Typography>
-            <Button variant="outlined">Book</Button>
+            <Link to={`/booking/${flight.departureCity}/${flight.destination}`} style={{ textDecoration: 'none' }}>
+              <Button variant="outlined">Book</Button>
+            </Link>
           </Stack>
         </Box>
       ))}
