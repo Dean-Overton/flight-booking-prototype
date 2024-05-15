@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import FlightSkeleton from '../FlightSkeleton';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 interface FlightSearchProps {
   sourceCode: string; // Prop name with its type (string)
@@ -70,7 +70,9 @@ const FlightSelection : React.FC<FlightSearchProps> = ({ sourceCode, destination
               {flight.departureTime} - {flight.arrivalTime}
             </Typography>
             <Typography>${flight.cost}</Typography>
-            <Link to={`/booking/${flight.departureCity}/${flight.destination}`} style={{ textDecoration: 'none' }}>
+            <Link to={`/booking/${flight.departureCity}/${flight.destination}`} 
+                state={ flight }
+                style={{ textDecoration: 'none' }}>
               <Button variant="outlined">Book</Button>
             </Link>
           </Stack>
@@ -82,6 +84,8 @@ const FlightSelection : React.FC<FlightSearchProps> = ({ sourceCode, destination
 export default FlightSelection;
 
 interface Flight {
+  departureDate: string;
+  arrivalDate: string;
   departureTime: string;
   arrivalTime: string;
   departureCity: string;
@@ -93,6 +97,8 @@ interface Flight {
 
 const flights: readonly Flight[] = [
   {
+    departureDate: '2024-08-18',
+    arrivalDate: '2024-08-18',
     departureTime: '14:30',
     arrivalTime: '16:30',
     departureCity: 'Sydney',
@@ -102,6 +108,8 @@ const flights: readonly Flight[] = [
     cost: 129.5,
   },
   {
+    departureDate: '2024-08-18',
+    arrivalDate: '2024-08-18',
     departureTime: '15:15',
     arrivalTime: '18:45',
     departureCity: 'Sydney',
@@ -111,6 +119,8 @@ const flights: readonly Flight[] = [
     cost: 325,
   },
   {
+    departureDate: '2024-08-18',
+    arrivalDate: '2024-08-18',
     departureTime: '11:15',
     arrivalTime: '13:15',
     departureCity: 'Sydney',

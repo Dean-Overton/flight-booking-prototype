@@ -1,16 +1,29 @@
 import * as React from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import FlightLandIcon from '@mui/icons-material/FlightLand';
 import SendIcon from '@mui/icons-material/Send';
+import { useLocation } from 'react-router-dom';
 
-
-export default function FlightSummaryCard() {
+interface Flight {
+    departureDate: string;
+    arrivalDate: string;
+    departureTime: string;
+    arrivalTime: string;
+    departureCity: string;
+    destination: string;
+    stopOver: string;
+    length: string;
+    cost: number;
+  }
+const FlightSummaryCard = () => {
+    const location = useLocation();
+    const flight = useState<Flight>(location.state.flight);
   return (
     <Box sx={{ minWidth: 275 }}>
       <Card variant="outlined">
@@ -20,7 +33,7 @@ export default function FlightSummaryCard() {
                 Flight Summary
             </Typography>
             <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                Sat, August 18, 2024
+                {flight}
             </Typography>
 
             <Stack mt={2} direction="row" justifyContent="space-between">
@@ -28,8 +41,8 @@ export default function FlightSummaryCard() {
                 <FlightLandIcon/>
             </Stack>
             <Stack mt={1} direction="row" justifyContent="space-between">
-                <Typography variant="body1">2:25 PM </Typography>
-                <Typography variant="body1">4:15 PM</Typography>
+                <Typography variant="body1">{flight.departureTime}</Typography>
+                <Typography variant="body1">{flight.arrivalTime}</Typography>
             </Stack>
             <Stack direction="row" justifyContent="space-between">
                 <Typography variant="body1">SYD</Typography>
@@ -37,8 +50,8 @@ export default function FlightSummaryCard() {
                 <Typography variant="body1">MEL</Typography>
             </Stack>
             <Stack direction="row" justifyContent="space-between">
-                <Typography variant="body2">18/08 </Typography>
-                <Typography variant="body2">18/08</Typography>
+                <Typography variant="body2">{flight.departureDate} </Typography>
+                <Typography variant="body2">{flight.arrivalDate}</Typography>
             </Stack>
             </CardContent>
         </React.Fragment>
@@ -46,3 +59,4 @@ export default function FlightSummaryCard() {
     </Box>
   );
 }
+export default FlightSummaryCard;

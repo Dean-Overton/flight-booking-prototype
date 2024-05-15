@@ -9,11 +9,24 @@ import Stack from '@mui/material/Stack';
 import LockIcon from '@mui/icons-material/Lock';
 
 
-export default function OutlinedCard() {
+interface PaymentSummaryProps {
+    cost: number,
+    seats: string[],
+}
+const OutlinedCard = ({cost, seats}: PaymentSummaryProps) => {
     const [paymentLoading, setPaymentLoading] = React.useState(false);
+
+    const tax = cost * 0.1;
+    const serviceFee = 20;
+
+    const [totalCost, setTotal] = React.useState((cost + tax+serviceFee).toString());
 
     function makePaymentClick () {
         setPaymentLoading(true);
+        setTimeout(() => {
+            setPaymentLoading(false);
+            alert('Payment Successful');
+        }, 2000);
     }
   return (
     <Box sx={{ minWidth: 275 }}>
@@ -29,7 +42,7 @@ export default function OutlinedCard() {
 
             <Stack direction="row" justifyContent="space-between">
                 <Typography variant="body2">Base Fare: </Typography>
-                <Typography variant="body2">${0}</Typography>
+                <Typography variant="body2">${cost}</Typography>
             </Stack>
             <Stack mt={1}direction="row" justifyContent="space-between">
                 <Typography variant="body2">Discount: </Typography>
@@ -37,16 +50,16 @@ export default function OutlinedCard() {
             </Stack>
             <Stack mt={1}direction="row" justifyContent="space-between">
                 <Typography variant="body2">Tax: </Typography>
-                <Typography variant="body2">${0}</Typography>
+                <Typography variant="body2">${tax}</Typography>
             </Stack>
             <Stack mt={1}direction="row" justifyContent="space-between">
                 <Typography variant="body2">Service Fee: </Typography>
-                <Typography variant="body2">${0}</Typography>
+                <Typography variant="body2">${serviceFee}</Typography>
             </Stack>
             <hr/>
             <Stack mt={1}direction="row" justifyContent="space-between">
                 <Typography variant="body2">Total Cost: </Typography>
-                <Typography variant="body2">{0}</Typography>
+                <Typography variant="body2">${totalCost}</Typography>
             </Stack>
             </CardContent>
             <CardActions>
@@ -65,3 +78,4 @@ export default function OutlinedCard() {
     </Box>
   );
 }
+export default OutlinedCard;

@@ -7,15 +7,13 @@ import PaymentSummaryCard from './payment-summary';
 import FlightSummaryCard from './flight-summary';
 import PaymentOptionsCard from './payment-options';
 
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
+interface PaymentProps
+{
+    totalCost: number,
+    seats: string[],
+}
 
-const Payment = () => {
+const Payment = ({totalCost, seats}:PaymentProps) => {
     return (
         <>
         <Box>
@@ -27,7 +25,7 @@ const Payment = () => {
                     <FlightSummaryCard/>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <PaymentSummaryCard/>
+                    <PaymentSummaryCard cost={totalCost} seats={seats}/>
                 </Grid>
             </Grid>
         </Box>

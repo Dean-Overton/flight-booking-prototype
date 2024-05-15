@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FlightBookingStepper from './stepper';
 import '../../App.css';
 
@@ -6,13 +6,22 @@ import { Typography, Paper, Box, Button, Stack } from '@mui/material';
 import ExtrasTab from './extras-tab';
 import SeatSelection from './seat-selection';
 import Payment from './payment';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 const Booking = () => {
-    const {source, destination} = useParams();
+    const location = useLocation();
+    const state = location.state;
     const [totalCost, setCost] = useState(375);
     const [progress, setProgress] = useState(0);
     const [seats, setSeats] = useState([]);
+    
+    useEffect(() => {
+        // Check if flight is undefined, if so redirect to home
+        
+        if (state == undefined) {
+            window.location.href = '/';
+        }
+    }, []);
 
     function back() {
         if (progress > 0) {
@@ -28,7 +37,7 @@ const Booking = () => {
     return (
         <Paper sx={{p:2, mx:'auto', width:'80%'}}>
             <Typography variant="h3">Booking Details</Typography>
-            <Typography variant="subtitle1">Current Flight: {source} - {destination}</Typography>
+            <Typography variant="subtitle1">Current Flight: {state.departureCity} - {state.destination}</Typography>
             <Typography variant="subtitle1">Total Cost: ${totalCost}</Typography>
             <FlightBookingStepper progress={progress}/>
             {seats.length!=0 &&<Typography variant="subtitle1">Selected Seats: {seats.map(seat => (
@@ -41,7 +50,7 @@ const Booking = () => {
             <Box sx={{mt:3}}>
                 {progress == 0 && <ExtrasTab totalCost={totalCost} costSetCallback={setCost}/>}
                 {progress == 1 && <SeatSelection numberOfPassengers={2} seatsSelectedCallback={setSeats}/>}
-                {progress == 2 && <Payment/>}
+                {progress == 2 && <Payment totalCost={totalCost} seats={seats}/>}
             </Box>
         </Paper>
     );
