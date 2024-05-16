@@ -6,13 +6,34 @@ import { Route, Routes } from 'react-router-dom';
 // Importing pages
 import Booking from './pages/booking';
 import FlightSearch from './pages/flightsearch';
+import ManageBooking from './pages/manageBooking';
+import createTheme from '@mui/material/styles/createTheme';
+import ThemeProvider from '@mui/material/styles/ThemeProvider';
+
+const theme = createTheme({
+  typography: {
+    subtitle1: {
+      fontWeight: 500,
+      color: 'gray'
+    },
+    subtitle2: {
+      fontWeight: 600,
+    },
+    body1: {
+      fontWeight: 500,
+    },
+  },
+});
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<FlightSearch />} />
-      <Route path="/booking/:source/:destination" element={<Booking />} />
-    </Routes>
+    <ThemeProvider theme={theme}>
+      <Routes>
+        <Route path="/" element={<FlightSearch />} />
+        <Route path="/booking/:source/:destination" element={<Booking />} />
+        <Route path="/manage-booking" element={<ManageBooking />} />
+      </Routes>
+    </ThemeProvider>
   );
 }
 

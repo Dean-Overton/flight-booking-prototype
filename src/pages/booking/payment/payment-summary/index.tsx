@@ -7,6 +7,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import LockIcon from '@mui/icons-material/Lock';
+import Swal from 'sweetalert2';
+import { setCookie } from 'typescript-cookie';
 
 
 interface PaymentSummaryProps {
@@ -16,16 +18,26 @@ interface PaymentSummaryProps {
 const OutlinedCard = ({cost, seats}: PaymentSummaryProps) => {
     const [paymentLoading, setPaymentLoading] = React.useState(false);
 
-    const tax = cost * 0.1;
+    const tax = Math.round((cost * 0.1)*100)/100;
     const serviceFee = 20;
 
     const [totalCost, setTotal] = React.useState((cost + tax+serviceFee).toString());
 
     function makePaymentClick () {
         setPaymentLoading(true);
+        setCookie('payment', 'success')
+        setCookie('seats', seats.join(','));
         setTimeout(() => {
             setPaymentLoading(false);
-            alert('Payment Successful');
+            Swal.fire({
+                title: 'Payment Successful!',
+                text: 'Your payment has been processed successfully, and flight tickets have been sent to your email. Thank you for choosing FlightDreamAir! Write down your confirmation number: #FDA172',
+                icon: 'success',
+                confirmButtonText: 'Ok',
+                willClose: () => {
+                    window.location.href = '/';
+                }
+            });
         }, 2000);
     }
   return (

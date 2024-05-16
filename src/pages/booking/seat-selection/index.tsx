@@ -3,10 +3,6 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 
 import Stack from '@mui/material/Stack';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import Checkbox from '@mui/material/Checkbox';
 import Tooltip from '@mui/material/Tooltip';
 import Divider from '@mui/material/Divider';
 import { Typography } from '@mui/material';
@@ -15,36 +11,39 @@ import ChairCheckBox from './chairCheckbox';
 interface SeatSelectionProps {
     numberOfPassengers: number,
     seatsSelectedCallback: (newSeats: string[]) => void;
+    seatsSelectedValue: string[];
 }
-const SeatSelection = (props: SeatSelectionProps) => {
-    const seatRows = 30;
-    const seatGroups = [2, 2]
-    const seatRowletters = ['A', 'B', 'C', 'D'];
-
-    // useEffect(() => {
-    //     const sumOfGroups = seatGroups.reduce((acc, current) => acc + current, 0);
-    //     if (sumOfGroups != seatRowletters.length) {
-
-    //     }
-    //   }, [seatGroups, seatRowletters]);
-    const seatCodes = [];
-    const seatMap: { [code: string]: boolean }  = {}
+const seatRowletters = ['A', 'B', 'C', 'D'];
+function generateDisabledSeats(currentSeats: string[]) {
     const seatDisabledMap: { [code: string]: boolean }  = {}
-    for (let i = 0; i < seatRows; i++) {
+    for (let i = 0; i < 30; i++) {
         for (let j = 0; j < 4; j++) {
             const seatCode = `${seatRowletters[j]}${i+1}`
-            seatCodes.push(seatCode);
-            
-            seatDisabledMap[seatCode] = Math.random() >= 0.5;
-
-            seatMap[seatCode] = false;
+            if (currentSeats.includes(seatCode)) {
+                seatDisabledMap[seatCode] = false;
+            } else {
+                seatDisabledMap[seatCode] = Math.random() >= 0.5;
+            }
         }
     }
-    const [disabledSeats, setDisabledSeats] = useState(seatDisabledMap);
-    const [seatAvailability, setSeatAvailability] = useState(seatMap);
+    return seatDisabledMap;
+}
+const SeatSelection = (props: SeatSelectionProps) => {
+    const seatMap: { [code: string]: boolean }  = {}
     
+    const disabledSeats = useState(generateDisabledSeats(props.seatsSelectedValue));
+    const seatCodes = Object.keys(disabledSeats[0]) as string[];
+    seatCodes.forEach(seatCode => {
+        if (props.seatsSelectedValue.includes(seatCode)) {
+            seatMap[seatCode] = true;
+        } else {
+            seatMap[seatCode] = false;
+        }
+        
+    });
+    const [seatAvailability, setSeatAvailability] = useState(seatMap);
     const [seatsSelectedCount, setseatsSelectedCount] = useState(0);
-    const [selectedSeatCodes, setSelectedSeatCodes] = useState<string[]>([]);
+    const [selectedSeatCodes, setSelectedSeatCodes] = useState<string[]>(props.seatsSelectedValue);
 
 
     const handleSeatSelectChange = (code: string) => (event: React.ChangeEvent<HTMLInputElement>)  => {
@@ -75,6 +74,8 @@ const SeatSelection = (props: SeatSelectionProps) => {
         <>
             <Box>
                 <Typography sx={{my:2}} variant="h5">{props.numberOfPassengers-seatsSelectedCount} seats remaining</Typography>
+                <div style={{display: 'flex', justifyContent: 'center'}}>
+                    <Box sx={{border: 'dashed', borderColor: 'grey', borderRadius: 5, p: 3}}>
                 <Stack 
                     direction="row"
                     divider={<Divider orientation="vertical" flexItem />}
@@ -101,6 +102,8 @@ const SeatSelection = (props: SeatSelectionProps) => {
                     </Grid>
                     ))}
                 </Grid>
+                </Box>
+                </div>
             </Box>
         </>
     );

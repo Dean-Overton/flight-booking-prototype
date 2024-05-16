@@ -5,83 +5,9 @@ import Typography from '@mui/material/Typography/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import FlightSkeleton from '../FlightSkeleton';
-import { Link, useParams } from 'react-router-dom';
-
-interface FlightSearchProps {
-  sourceCode: string; // Prop name with its type (string)
-  destinationCode: string;
-}
-const FlightSelection : React.FC<FlightSearchProps> = ({ sourceCode, destinationCode }) => {
-  // TODO: fetch data from backend
-  // Maybe move skeleton to here
-
-  const [loadingTime, setLoadTime] = useState(3);
-  const [loadingInvervalID, setloadingInvervalID] =
-    useState<NodeJS.Timeout | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(()=>{
-    setLoading(true);
-    setLoaded(false);
-    const intervalId = setInterval(() => {
-      // This code will run every 1000 milliseconds (1 second)
-      setLoadTime(prevCount => prevCount - 1);
-    }, 1000);
-    setloadingInvervalID(intervalId);
-  }, []);
-
-  useEffect(() => {
-    setLoadTime(3);
-    setLoaded(false);
-    setLoading(true);
-    const intervalId = setInterval(() => {
-      setLoadTime(prevCount => prevCount - 1);
-    }, 1000);
-    setloadingInvervalID(intervalId);
-  }, [sourceCode, destinationCode]);
-
-  useEffect(() => {
-    if (loadingTime <= 0) {
-      clearInterval(loadingInvervalID);
-      setLoading(false);
-      setLoaded(true);
-    }
-  }, [loadingTime]);
-
-  useEffect(() => {
-    return () => {
-      if (loadingInvervalID) {
-        clearInterval(loadingInvervalID);
-      }
-    };
-  }, [loadingInvervalID]);
-
-  return (
-    <>
-      {loading && Array.from({ length: 3 }, () => <FlightSkeleton />)}
-      {loaded && flights.map((flight) => (
-        <Box sx={{ border: 'solid', borderRadius: 2 }}>
-          <Stack direction="row" spacing={3} margin={2}>
-            <Typography>
-              {flight.departureCity} to {flight.destination}
-            </Typography>
-            <Typography>
-              {flight.departureTime} - {flight.arrivalTime}
-            </Typography>
-            <Typography>${flight.cost}</Typography>
-            <Link to={`/booking/${flight.departureCity}/${flight.destination}`} 
-                state={ flight }
-                style={{ textDecoration: 'none' }}>
-              <Button variant="outlined">Book</Button>
-            </Link>
-          </Stack>
-        </Box>
-      ))}
-    </>
-  );
-};
-export default FlightSelection;
+import { Link } from 'react-router-dom';
+import { getFlights } from './flights';
+import { AirportType } from '../AirportSelect/airports';
 
 interface Flight {
   departureDate: string;
@@ -89,44 +15,66 @@ interface Flight {
   departureTime: string;
   arrivalTime: string;
   departureCity: string;
-  destination: string;
+  destinationCity: string;
   stopOver: string;
-  length: string;
+  flightLength: string;
   cost: number;
 }
 
-const flights: readonly Flight[] = [
-  {
-    departureDate: '2024-08-18',
-    arrivalDate: '2024-08-18',
-    departureTime: '14:30',
-    arrivalTime: '16:30',
-    departureCity: 'Sydney',
-    destination: 'Brisbane',
-    stopOver: 'Direct',
-    length: '2h',
-    cost: 129.5,
-  },
-  {
-    departureDate: '2024-08-18',
-    arrivalDate: '2024-08-18',
-    departureTime: '15:15',
-    arrivalTime: '18:45',
-    departureCity: 'Sydney',
-    destination: 'Perth',
-    stopOver: 'Direct',
-    length: '3h 30m',
-    cost: 325,
-  },
-  {
-    departureDate: '2024-08-18',
-    arrivalDate: '2024-08-18',
-    departureTime: '11:15',
-    arrivalTime: '13:15',
-    departureCity: 'Sydney',
-    destination: 'Hobart',
-    stopOver: 'Adelaide',
-    length: '3h',
-    cost: 250,
-  },
-];
+interface FlightSearchProps {
+  source: AirportType; // Prop name with its type (string)
+  destination: AirportType;
+  date: Date|null;
+  passengers: number;
+}
+
+
+const FlightSelection : React.FC<FlightSearchProps> = ({ source, destination, date, passengers }) => {
+  // TODO: fetch data from backend
+  // Maybe move skeleton to here
+
+  const LOAD_TIME = 3000;
+  const [loading, setLoading] = useState(true);
+
+  const [flights, setFlights] = useState<Flight[]>([]);
+  // Update flights when source, destination changes and date changes
+
+  useEffect(()=>{
+    setFlights(getFlights(source, destination, date? date : new Date(), passengers));
+
+    setLoading(true);
+    const timeoutID = setTimeout(() => {
+        setLoading(false);
+    }, LOAD_TIME);
+    return () => {
+        clearTimeout(timeoutID);
+    }
+  }, [source, destination]);
+
+  return (
+    <>
+      {loading ? (
+        Array.from({ length: 3 }, (_, i) => <FlightSkeleton key={i}/>)
+      ):
+        flights.map((flight, idx) => (
+          <Box sx={{ border: 'solid', borderRadius: 2 }}>
+            <Stack direction="row" spacing={3} margin={2}>
+              <Typography>
+                {flight.departureCity} to {flight.destinationCity}
+              </Typography>
+              <Typography>
+                {flight.departureTime} - {flight.arrivalTime}
+              </Typography>
+              <Typography>${flight.cost}</Typography>
+              <Link to={`/booking/${flight.departureCity}/${flight.destinationCity}`} 
+                  state={ flight }
+                  style={{ textDecoration: 'none' }}>
+                <Button variant="outlined">Book</Button>
+              </Link>
+            </Stack>
+          </Box>
+        ))}
+    </>
+  );
+};
+export default FlightSelection;
