@@ -9,11 +9,11 @@ import PaymentOptionsCard from './payment-options';
 
 interface PaymentProps
 {
-    totalCost: number,
-    seats: string[],
+    flightDetails: any,
+    flightSetCallback: (newFlightDetails: any) => void,
 }
 
-const Payment = ({totalCost, seats}:PaymentProps) => {
+const Payment = (props:PaymentProps) => {
     return (
         <>
         <Box>
@@ -22,10 +22,10 @@ const Payment = ({totalCost, seats}:PaymentProps) => {
                     <PaymentOptionsCard/>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <FlightSummaryCard/>
+                    <FlightSummaryCard {...props}/>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <PaymentSummaryCard cost={totalCost} seats={seats}/>
+                    <PaymentSummaryCard {...props}/>
                 </Grid>
             </Grid>
         </Box>

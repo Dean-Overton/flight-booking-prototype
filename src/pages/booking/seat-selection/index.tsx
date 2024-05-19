@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 
@@ -9,13 +9,14 @@ import { Typography } from '@mui/material';
 import ChairCheckBox from './chairCheckbox';
 
 interface SeatSelectionProps {
+    flightDetails: any,
+    flightSetCallback: (newFlightDetails: any) => void,
     numberOfPassengers: number,
-    seatsSelectedCallback: (newSeats: string[]) => void;
-    seatsSelectedValue: string[];
 }
 const seatRowletters = ['A', 'B', 'C', 'D'];
 function generateDisabledSeats(currentSeats: string[]) {
     const seatDisabledMap: { [code: string]: boolean }  = {}
+    console.log("currentSeats", currentSeats)
     for (let i = 0; i < 30; i++) {
         for (let j = 0; j < 4; j++) {
             const seatCode = `${seatRowletters[j]}${i+1}`
@@ -30,11 +31,16 @@ function generateDisabledSeats(currentSeats: string[]) {
 }
 const SeatSelection = (props: SeatSelectionProps) => {
     const seatMap: { [code: string]: boolean }  = {}
-    
-    const disabledSeats = useState(generateDisabledSeats(props.seatsSelectedValue));
+
+    if (props.flightDetails['seats'] == null) {
+        props.flightSetCallback({...props.flightDetails, 
+            seats: [],
+        });
+    }
+    const disabledSeats = useState(generateDisabledSeats(props.flightDetails['seats']));
     const seatCodes = Object.keys(disabledSeats[0]) as string[];
     seatCodes.forEach(seatCode => {
-        if (props.seatsSelectedValue.includes(seatCode)) {
+        if (props.flightDetails['seats'].includes(seatCode)) {
             seatMap[seatCode] = true;
         } else {
             seatMap[seatCode] = false;
@@ -42,8 +48,8 @@ const SeatSelection = (props: SeatSelectionProps) => {
         
     });
     const [seatAvailability, setSeatAvailability] = useState(seatMap);
-    const [seatsSelectedCount, setseatsSelectedCount] = useState(0);
-    const [selectedSeatCodes, setSelectedSeatCodes] = useState<string[]>(props.seatsSelectedValue);
+    const [seatsSelectedCount, setseatsSelectedCount] = useState(props.flightDetails['seats'].length);
+    const [selectedSeatCodes, setSelectedSeatCodes] = useState<string[]>(props.flightDetails['seats']);
 
 
     const handleSeatSelectChange = (code: string) => (event: React.ChangeEvent<HTMLInputElement>)  => {
@@ -56,7 +62,9 @@ const SeatSelection = (props: SeatSelectionProps) => {
             setseatsSelectedCount(seatsSelectedCount-1);
             const newCodes = selectedSeatCodes.filter(item => item !== code);
             setSelectedSeatCodes(newCodes);
-            props.seatsSelectedCallback(newCodes);
+            props.flightSetCallback({ ...props.flightDetails, 
+                seats: newCodes 
+            });
         } else {
             if (seatsSelectedCount >= props.numberOfPassengers) {
                 return;
@@ -66,7 +74,9 @@ const SeatSelection = (props: SeatSelectionProps) => {
             setseatsSelectedCount(seatsSelectedCount+1);
             const newCodes = [...selectedSeatCodes, code];
             setSelectedSeatCodes(newCodes);
-            props.seatsSelectedCallback(newCodes);
+            props.flightSetCallback({ ...props.flightDetails, 
+                seats: newCodes 
+            });
         }
     }
     
@@ -88,7 +98,7 @@ const SeatSelection = (props: SeatSelectionProps) => {
                     <Typography>R Window</Typography>
                 </Stack>
                 <Grid container spacing={1} width={300} mx='auto'>
-                    {seatCodes.map(seatCode => (
+                    {seatCodes.map((seatCode:string) => (
                     <Grid item xs={3}>
                         <Tooltip title={seatCode}>
                         <ChairCheckBox

@@ -6,22 +6,20 @@ import { Typography, Paper, Box, Button, Stack } from '@mui/material';
 import ExtrasTab from './extras-tab';
 import SeatSelection from './seat-selection';
 import Payment from './payment';
-import { useLocation, useParams } from 'react-router-dom';
 
-import HeaderImage from '../pageHeader.png';
+import { getDictionaryFromCookie } from '../functions/getFlightState';
 
 const Booking = () => {
-    const location = useLocation();
-    const state = location.state;
-    const flight = state[0];
-    const [totalCost, setCost] = useState(375);
-    const [progress, setProgress] = useState(0);
-    const [seats, setSeats] = useState([]);
+    const flight = getDictionaryFromCookie('flight');
+
+    const [flightBookingDetails, setFlightBookingDetails] = useState(flight);
     
+    const [progress, setProgress] = useState(0);
+
     useEffect(() => {
         // Check if flight is undefined, if so redirect to home
         
-        if (state == undefined) {
+        if (flight == null) {
             window.location.href = '/';
         }
     }, []);
@@ -38,10 +36,7 @@ const Booking = () => {
     }
 
     return (
-        <>
-        <img src={HeaderImage} alt="Background" style={{ width: '100%', height: '75%', position: 'absolute', top: 0, left: 0, zIndex: -1 }} />
-
-        <div style={{position: 'absolute', top: 0, left:0, width:'100%'}}>            
+        <>           
         <Box 
             sx={{
                 mx: {xs: 2, md: 20},
@@ -52,11 +47,14 @@ const Booking = () => {
             <Typography variant="h3" mb={2}>Booking Details</Typography>
             {progress !=2 && (
                 <>
-                <Typography variant="subtitle1">Current Flight: {state.departureCity} - {state.destinationCity}</Typography>
-                <Typography variant="subtitle1">Total Cost: ${totalCost}</Typography>
-                {progress!=2 && seats.length!=0 &&<Typography variant="subtitle1">Selected Seats: {seats.map(seat => (
-                `${seat}, `
-            ))}</Typography>}
+                <Typography variant="subtitle1">Current Flight: {flight.departureCity} - {flight.destinationCity}</Typography>
+                <Typography variant="subtitle1">Total Cost: ${flightBookingDetails['cost']}</Typography>
+                {progress!=2 && flightBookingDetails['seats'] != null && 
+                    <Typography variant="subtitle1">Selected Seats: {
+                        flightBookingDetails['seats'].map((seat: string) => (
+                        `${seat}, `))}
+                    </Typography>
+                }
                 </>
             )}
             <FlightBookingStepper progress={progress}/>
@@ -65,13 +63,12 @@ const Booking = () => {
                 {progress != 2 && <Button onClick={()=>next()} variant="contained" color="secondary">Next</Button>}
             </Stack>
             <Box sx={{mt:3}}>
-                {progress == 0 && <ExtrasTab totalCost={totalCost} costSetCallback={setCost}/>}
-                {progress == 1 && <SeatSelection numberOfPassengers={state.passengers} seatsSelectedCallback={setSeats} seatsSelectedValue={seats}/>}
-                {progress == 2 && <Payment totalCost={totalCost} seats={seats}/>}
+                {progress == 0 && <ExtrasTab flightDetails={flightBookingDetails} flightSetCallback={setFlightBookingDetails}/>}
+                {progress == 1 && <SeatSelection numberOfPassengers={flight.passengers} flightDetails={flightBookingDetails} flightSetCallback={setFlightBookingDetails}/>}
+                {progress == 2 && <Payment flightDetails={flightBookingDetails} flightSetCallback={setFlightBookingDetails}/>}
             </Box>
         </Paper>
         </Box>
-        </div>
         </>
     );
 }

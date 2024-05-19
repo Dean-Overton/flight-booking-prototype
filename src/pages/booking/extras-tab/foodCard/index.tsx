@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -10,18 +10,35 @@ import Checkbox from '@mui/material/Checkbox';
 
 interface FoodCardProps 
 {
-    totalCost:number,
-    costSetCallback: (cost:number) => void,
+  flightDetails: any,
+  flightSetCallback: (newFlightDetails: any) => void
 }
-const FoodCard = ({totalCost, costSetCallback}: FoodCardProps) => {
+const FoodCard = ({flightDetails, flightSetCallback}: FoodCardProps) => {
   const costNumber = 8;
+  
+  const [checked, setChecked] = useState(false);
+  useEffect(() => {
+    setChecked(flightDetails.addons?.includes("In-Flight Meal") ?? false);
+  }, [flightDetails.addons]);
+
   const handleCheckBoxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      costSetCallback(totalCost + costNumber);
+    
+    if (event.target.checked) {      
+      flightSetCallback({...flightDetails, 
+        addons: [...flightDetails['addons'], "In-Flight Meal"],
+        cost: flightDetails['cost'] + costNumber
+      });
+      setChecked(true);
     } else {
-      costSetCallback(totalCost - costNumber);
+      flightSetCallback({...flightDetails, 
+        addons: flightDetails['addons'].filter(
+          (addon: string) => addon !== "In-Flight Meal"),
+        cost: flightDetails['cost'] - costNumber
+      });
+      setChecked(false);
     }
   };
+
   return (
     <Box sx={{ minWidth: 275 }}>
       <Card variant="outlined">
@@ -37,7 +54,9 @@ const FoodCard = ({totalCost, costSetCallback}: FoodCardProps) => {
           </Typography>
         </CardContent>
         <CardActions>
-          <FormControlLabel sx={{ml:1}} control={<Checkbox onClick={handleCheckBoxChange}/>} label="Inlcude this." />
+          <FormControlLabel sx={{ml:1}} control={
+            <Checkbox checked={checked} onClick={handleCheckBoxChange}/>
+            } label="Inlcude this." />
           <Button size="small">Ingredients</Button>
         </CardActions>
       </Card>

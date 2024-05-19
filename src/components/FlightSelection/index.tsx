@@ -9,6 +9,9 @@ import { Link } from 'react-router-dom';
 import { getFlights } from './flights';
 import { AirportType } from '../AirportSelect/airports';
 
+import { saveDictionaryAsCookie } from '../../pages/functions/getFlightState';
+import Swal from 'sweetalert2';
+
 interface Flight {
   departureDate: string;
   arrivalDate: string;
@@ -51,13 +54,27 @@ const FlightSelection : React.FC<FlightSearchProps> = ({ source, destination, da
     }
   }, [source, destination]);
 
+  function Book(flight: Flight) {
+    saveDictionaryAsCookie('flight', flight);
+
+    // Fire loading alert
+    Swal.fire({
+      title: 'Booking Flight',
+      text: 'Loading flight, please wait...',
+      timer: 3000,
+    }).then(() => {
+      // Redirect to booking details page
+      window.location.href = '/booking-details';
+    });
+  }
+
   return (
     <>
       {loading ? (
         Array.from({ length: 3 }, (_, i) => <FlightSkeleton key={i}/>)
       ):
         flights.map((flight, idx) => (
-          <Box sx={{ border: 'solid', borderRadius: 2 }}>
+          <Box sx={{ border: 'solid', borderRadius: 2 }} key={idx}>
             <Stack direction="row" spacing={3} margin={2}>
               <Typography>
                 {flight.departureCity} to {flight.destinationCity}
@@ -66,11 +83,7 @@ const FlightSelection : React.FC<FlightSearchProps> = ({ source, destination, da
                 {flight.departureTime} - {flight.arrivalTime}
               </Typography>
               <Typography>${flight.cost}</Typography>
-              <Link to={`/booking/${flight.departureCity}/${flight.destinationCity}`} 
-                  state={ flight }
-                  style={{ textDecoration: 'none' }}>
-                <Button variant="outlined">Book</Button>
-              </Link>
+              <Button variant="outlined" onClick={(e) => Book(flight)}>Book</Button>
             </Stack>
           </Box>
         ))}

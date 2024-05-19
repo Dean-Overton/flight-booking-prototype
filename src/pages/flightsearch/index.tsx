@@ -11,11 +11,10 @@ import ClassSelect from '../../components/ClassSelect';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import FlightSelections from '../../components/FlightSelection';
-import { Box, Button, Container, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import CountSelect from '../../components/CountSelect';
 import DateRangePicker from '@wojtekmaj/react-daterange-picker';
 
-import HeaderImage from '../pageHeader.png';
 
 type ValuePiece = Date | null;
 
@@ -48,9 +47,6 @@ const FlightSearch = () => {
     
     return (
       <>
-        <img src={HeaderImage} alt="Background" style={{ width: '100%', height: '75%', position: 'absolute', top: 0, left: 0, zIndex: -1 }} />
-
-        <Box sx={{position: 'absolute', top: 0, left:0, width:'100%'}}>          
             <Box>
               <a href="https://flightdreamair-40r1--5173--7dbe22a9.local-credentialless.webcontainer.io/">
                 <img src={flightLogo} className="logo" alt="FlightDreamAir logo" />
@@ -98,7 +94,6 @@ const FlightSearch = () => {
             </Stack>
             </Stack>
             </Box>
-          </Box>
         </>
       );
 };

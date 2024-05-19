@@ -10,16 +10,39 @@ import Checkbox from '@mui/material/Checkbox';
 
 interface InsuranceCardProps 
 {
-    totalCost:number,
-    costSetCallback: (cost:number) => void,
+    flightDetails: any,
+    flightSetCallback: (newFlightDetails: any) => void
 }
-const InsuranceCard = ({totalCost, costSetCallback}: InsuranceCardProps) => {
+const InsuranceCard = (props: InsuranceCardProps) => {
   const costNumber = 23;
+  if (props.flightDetails['addons'] == null) {
+    props.flightSetCallback({...props.flightDetails, 
+        addons: [],
+    });
+}
+  const [checked, setChecked] = React.useState(false);
+  React.useEffect(() => {
+    setChecked(props.flightDetails.addons?.includes("Insurance") ?? false);
+  }, [props.flightDetails.addons]);
+  
   const handleCheckBoxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      costSetCallback(totalCost + costNumber);
+      props.flightSetCallback({
+        ...props.flightDetails,
+        addons: [...props.flightDetails.addons, "Insurance"],
+        cost: props.flightDetails.cost + costNumber
+      });
+      
+      setChecked(true);
     } else {
-      costSetCallback(totalCost - costNumber);
+      props.flightSetCallback({
+        ...props.flightDetails,
+        addons: props.flightDetails['addons'].filter(
+          (addon: string) => addon !== "Insurance"),
+        cost: props.flightDetails['cost'] - costNumber
+      });
+
+      setChecked(false);
     }
   };
 
@@ -38,7 +61,9 @@ const InsuranceCard = ({totalCost, costSetCallback}: InsuranceCardProps) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <FormControlLabel sx={{ml:1}} control={<Checkbox onClick={handleCheckBoxChange} />} label="Yes, include this." />
+        <FormControlLabel sx={{ml:1}} control={
+          <Checkbox checked={checked} onClick={handleCheckBoxChange} />
+          } label="Yes, include this." />
         <Button size="small">Terms and Conditions</Button>
       </CardActions>
       </Card>

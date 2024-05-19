@@ -9,20 +9,26 @@ import FoodCard from './foodCard';
 
 interface ExtraTabProps 
 {
-    totalCost: number,
-    costSetCallback: (cost:number) => void
+    flightDetails: any,
+    flightSetCallback: (newFlightDetails: any) => void
 }
 
-const ExtrasTab = ({totalCost, costSetCallback}: ExtraTabProps) => {
+const ExtrasTab = ({flightDetails, flightSetCallback}: ExtraTabProps) => {
+    if (flightDetails['addons'] == null) {
+        flightSetCallback({...flightDetails, 
+            addons: [],
+        });
+    }
+    
     return (
         <>
         <Box>
             <Grid container spacing={2}>
                 <Grid item xs={12} lg={6}>
-                    <InsuranceCard totalCost={totalCost} costSetCallback={costSetCallback}/>
+                    <InsuranceCard flightDetails={flightDetails} flightSetCallback={flightSetCallback}/>
                 </Grid>
                 <Grid item xs={12} lg={6}>
-                    <FoodCard totalCost={totalCost} costSetCallback={costSetCallback}/>
+                    <FoodCard flightDetails={flightDetails} flightSetCallback={flightSetCallback}/>
                 </Grid>
             </Grid>
         </Box>

@@ -9,24 +9,29 @@ import Stack from '@mui/material/Stack';
 import LockIcon from '@mui/icons-material/Lock';
 import Swal from 'sweetalert2';
 import { setCookie } from 'typescript-cookie';
+import { saveDictionaryAsCookie } from '../../../functions/getFlightState';
 
 
 interface PaymentSummaryProps {
-    cost: number,
-    seats: string[],
+    flightDetails: any,
+    flightSetCallback: (newFlightDetails: any) => void,
 }
-const OutlinedCard = ({cost, seats}: PaymentSummaryProps) => {
+const OutlinedCard = ({flightDetails, flightSetCallback}: PaymentSummaryProps) => {
     const [paymentLoading, setPaymentLoading] = React.useState(false);
 
+    const cost = flightDetails['cost'];
     const tax = Math.round((cost * 0.1)*100)/100;
     const serviceFee = 20;
 
-    const [totalCost, setTotal] = React.useState((cost + tax+serviceFee).toString());
+    const totalCost  = (cost + tax + serviceFee).toString();
 
     function makePaymentClick () {
         setPaymentLoading(true);
-        setCookie('payment', 'success')
-        setCookie('seats', seats.join(','));
+        setCookie('payment', 'success')       
+        saveDictionaryAsCookie('flight', {
+            ...flightDetails,
+            cost: 0,
+            paidAmount: totalCost});
         setTimeout(() => {
             setPaymentLoading(false);
             Swal.fire({

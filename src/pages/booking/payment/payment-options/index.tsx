@@ -13,6 +13,16 @@ import { Button, TextField } from '@mui/material';
 import Paypal from './paypal.png';
 import SvgIcon from '@mui/material/SvgIcon';
 
+export const PaypalButton = (props: any) => {
+  return (
+    <Button 
+      variant="outlined"
+      onClick={props.onClick}>
+        <img src={Paypal} alt="Logo" style={{ width: 24, height: 24, marginRight:12 }} /> Paypal
+    </Button>
+  );
+}
+
 export default function PaymentOptionsCard() {
   return (
     <Box sx={{ minWidth: 275 }}>
@@ -24,10 +34,7 @@ export default function PaymentOptionsCard() {
             </Typography>
 
             <Stack spacing={2}>
-            <Button 
-                variant="outlined">
-                  <img src={Paypal} alt="Logo" style={{ width: 24, height: 24, marginRight:12 }} /> Paypal
-            </Button>
+            <PaypalButton/>
             <TextField id="standard-basic" label="Email" variant="standard" placeholder='john@gmail.com' />
             </Stack>
             </CardContent>

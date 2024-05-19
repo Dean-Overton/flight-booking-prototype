@@ -9,6 +9,9 @@ import FlightSearch from './pages/flightsearch';
 import ManageBooking from './pages/manageBooking';
 import createTheme from '@mui/material/styles/createTheme';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
+import NavigationAppBar from './components/NavBar';
+import Header from './components/Header';
+import Box from '@mui/material/Box';
 
 const theme = createTheme({
   typography: {
@@ -28,11 +31,15 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <Routes>
-        <Route path="/" element={<FlightSearch />} />
-        <Route path="/booking/:source/:destination" element={<Booking />} />
-        <Route path="/manage-booking" element={<ManageBooking />} />
-      </Routes>
+      <Header />
+      <Box sx={{position: 'absolute', top: 0, left:0, width:'100%'}}>
+        <NavigationAppBar />
+        <Routes>
+            <Route path="/" element={<FlightSearch />} />
+            <Route path="/booking-details" element={<Booking />} />
+            <Route path="/manage-booking" element={<ManageBooking />} />
+        </Routes>
+      </Box>
     </ThemeProvider>
   );
 }

@@ -10,23 +10,13 @@ import FlightLandIcon from '@mui/icons-material/FlightLand';
 import SendIcon from '@mui/icons-material/Send';
 import { useLocation } from 'react-router-dom';
 
-type Flight = {
-    arrivalDate: string;
-    arrivalTime: string;
-    cost: number;
-    departureCity: string;
-    departureCode: string;
-    departureDate: string;
-    departureTime: string;
-    destinationCity: string;
-    destinationCode: string;
-    flightLength: string;
-    passengers: number;
-    stopOver: string;
+interface FlightSummaryProps
+{
+    flightDetails: any,
+    flightSetCallback: (newFlightDetails: any) => void,
 }
-const FlightSummaryCard = () => {
-    const location = useLocation();
-    const flight = location.state as Flight;
+const FlightSummaryCard = (props: FlightSummaryProps) => {
+    
   return (
     <Box sx={{ minWidth: 275 }}>
       <Card variant="outlined">
@@ -36,7 +26,7 @@ const FlightSummaryCard = () => {
                 Flight Summary
             </Typography>
             <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                {flight.departureDate}
+                {props.flightDetails['departureDate']}
             </Typography>
 
             <Stack mt={2} direction="row" justifyContent="space-between">
@@ -44,21 +34,21 @@ const FlightSummaryCard = () => {
                 <FlightLandIcon/>
             </Stack>
             <Stack mt={1} direction="row" justifyContent="space-between">
-                <Typography variant="body1">{flight.departureTime}</Typography>
-                <Typography variant="body1">{flight.arrivalTime}</Typography>
+                <Typography variant="body1">{props.flightDetails['departureTime']}</Typography>
+                <Typography variant="body1">{props.flightDetails['arrivalTime']}</Typography>
             </Stack>
             <Stack direction="row" justifyContent="space-between">
-                <Typography variant="body2">{flight.departureDate} </Typography>
-                <Typography variant="body2">{flight.arrivalDate}</Typography>
+                <Typography variant="body2">{props.flightDetails['departureDate']} </Typography>
+                <Typography variant="body2">{props.flightDetails['arrivalDate']}</Typography>
             </Stack>
             <Stack direction="row" mt={1}  justifyContent="space-between">
-                <Typography variant="body1">{flight.departureCode}</Typography>
+                <Typography variant="body1">{props.flightDetails['departureCode']}</Typography>
                 <SendIcon/>
-                <Typography variant="body1">{flight.destinationCode}</Typography>
+                <Typography variant="body1">{props.flightDetails['destinationCode']}</Typography>
             </Stack>
             <Stack direction="row" justifyContent="space-between">
-                <Typography variant="body2">{flight.departureCity}</Typography>
-                <Typography variant="body2">{flight.destinationCity}</Typography>
+                <Typography variant="body2">{props.flightDetails['departureCity']}</Typography>
+                <Typography variant="body2">{props.flightDetails['destinationCity']}</Typography>
             </Stack>
             </CardContent>
         </React.Fragment>
