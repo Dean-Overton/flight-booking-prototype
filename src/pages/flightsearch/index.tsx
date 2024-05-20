@@ -18,6 +18,7 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 
 import CountSelect from '../../components/CountSelect';
 import DateRangePicker from '@wojtekmaj/react-daterange-picker';
+import ClassCards from '../../components/ClassCards';
 
 
 type ValuePiece = Date | null;
@@ -96,6 +97,8 @@ const FlightSearch = () => {
                   passengers={passengerCountRef.current!.value}/>
               )}
             </Stack>
+            <Divider/>
+            <ClassCards/>
             <Divider/>
             <Stack 
               mt={3} 
