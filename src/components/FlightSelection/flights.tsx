@@ -12,7 +12,7 @@ function getFlights(source: AirportType, destination: AirportType, date: Date, p
         // Put departure time in 24-hour format
         const departureTimeString = departureTime < 10 ? '0' + departureTime + ':00' : departureTime + ':00';
         // Generate random length of flight with 'h' appended
-        const length = Math.floor(Math.random() * 5) + 1;
+        const length = Math.floor(Math.random() * 3) + 3;
         const lengthString = length + 'h';
         
         // Arrival time is length after departure

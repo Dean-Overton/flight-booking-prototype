@@ -20,6 +20,16 @@ import { PaypalButton } from '../../booking/payment/payment-options';
 const FlightReviewPanel = () => {
 
     const flightDict = getDictionaryFromCookie('flight');
+    if (flightDict === null || Object.keys(flightDict).length === 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'No Booking Found',
+            text: 'Please enter a valid booking number to view your booking.',
+            willClose: () => {
+                window.location.reload();
+            }
+        });
+    }
     const [flight, setFlight] = useState(flightDict);
     useEffect(() => {
         console.log(flight);
@@ -41,17 +51,6 @@ const FlightReviewPanel = () => {
         flightDict['length'] = length;
     }
 
-    if (flightDict === null) {
-        Swal.fire({
-            icon: 'error',
-            title: 'No Booking Found',
-            text: 'Please enter a valid booking number to view your booking.',
-            willClose: () => {
-                window.location.reload();
-            }
-        });
-    }
-
     const handleCancel = () => {
         Swal.fire({
             title: 'Are you sure you want to cancel your booking?',
@@ -66,7 +65,11 @@ const FlightReviewPanel = () => {
                     'Cancelled!',
                     'Your booking has been cancelled.',
                     'success'
-                );
+                ).then(() => {
+                    // Remove flight cookie
+                    saveDictionaryAsCookie('flight', {});
+                    window.location.reload();
+                });
             }
         });
     }
