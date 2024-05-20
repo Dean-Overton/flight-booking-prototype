@@ -23,7 +23,7 @@ const OutlinedCard = ({flightDetails, flightSetCallback}: PaymentSummaryProps) =
     const tax = Math.round((cost * 0.1)*100)/100;
     const serviceFee = 20;
 
-    const totalCost  = (cost + tax + serviceFee).toString();
+    const totalCost  = Math.round(cost + tax + serviceFee).toString();
 
     function makePaymentClick () {
         setPaymentLoading(true);
