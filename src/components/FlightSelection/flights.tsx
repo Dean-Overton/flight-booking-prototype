@@ -21,7 +21,7 @@ function getFlights(source: AirportType, destination: AirportType, date: Date, p
         const arrivalTimeString = arrivalTime < 10 ? '0' + arrivalTime + ':00' : arrivalTime + ':00';
 
         // Generate a random cost between 100 and 500
-        const cost = Math.round((Math.random() * 400 + 100)*100)/100;
+        const cost = Math.round((Math.random() * 200 + 200)*passengers*100)/100;
 
 
         flights.push({

@@ -11,7 +11,11 @@ import ClassSelect from '../../components/ClassSelect';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import FlightSelections from '../../components/FlightSelection';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Divider, IconButton, Typography } from '@mui/material';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import TwitterIcon from '@mui/icons-material/Twitter';
+
 import CountSelect from '../../components/CountSelect';
 import DateRangePicker from '@wojtekmaj/react-daterange-picker';
 
@@ -92,8 +96,25 @@ const FlightSearch = () => {
                   passengers={passengerCountRef.current!.value}/>
               )}
             </Stack>
+            <Divider/>
+            <Stack 
+              mt={3} 
+              direction='row' 
+              justifyContent="center"
+              alignItems="center">
+              {/* Social handles */}
+              <IconButton color="primary">
+                <InstagramIcon />
+              </IconButton>
+              <IconButton color="primary">
+                <FacebookIcon/>
+              </IconButton>
+              <IconButton color="primary">
+                <TwitterIcon/>
+              </IconButton>
             </Stack>
-            </Box>
+          </Stack>
+          </Box>
         </>
       );
 };
